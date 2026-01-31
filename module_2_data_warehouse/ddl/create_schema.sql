@@ -1,11 +1,10 @@
--- Create schema for Data Warehouse
+-- Create schema for Data Warehouse (manual / step-by-step)
 CREATE SCHEMA IF NOT EXISTS staging;
 SET search_path TO staging;
 
 -- =========================
 -- Dimension tables
 -- =========================
-
 CREATE TABLE IF NOT EXISTS "DimDate" (
     dateid INTEGER PRIMARY KEY,
     fulldate DATE,
@@ -26,7 +25,7 @@ CREATE TABLE IF NOT EXISTS "DimCountry" (
     countryname VARCHAR(50)
 );
 
--- Optional dimension (designed but not populated)
+-- Optional dimension (designed but not populated in this lab)
 CREATE TABLE IF NOT EXISTS "DimItem" (
     itemid INTEGER PRIMARY KEY,
     itemname VARCHAR(100),
@@ -36,7 +35,6 @@ CREATE TABLE IF NOT EXISTS "DimItem" (
 -- =========================
 -- Fact table
 -- =========================
-
 CREATE TABLE IF NOT EXISTS "FactSales" (
     salesid INTEGER PRIMARY KEY,
     dateid INTEGER,
@@ -48,20 +46,35 @@ CREATE TABLE IF NOT EXISTS "FactSales" (
 );
 
 -- =========================
--- Constraints (optional)
+-- Constraints (optional, safe for re-runs)
 -- =========================
-ALTER TABLE "FactSales"
-    ADD CONSTRAINT fk_fact_date FOREIGN KEY (dateid) REFERENCES "DimDate"(dateid);
+DO $$
+BEGIN
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_fact_date') THEN
+        ALTER TABLE "FactSales"
+            ADD CONSTRAINT fk_fact_date
+            FOREIGN KEY (dateid) REFERENCES "DimDate"(dateid) NOT VALID;
+    END IF;
 
-ALTER TABLE "FactSales"
-    ADD CONSTRAINT fk_fact_category FOREIGN KEY (categoryid) REFERENCES "DimCategory"(categoryid);
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_fact_category') THEN
+        ALTER TABLE "FactSales"
+            ADD CONSTRAINT fk_fact_category
+            FOREIGN KEY (categoryid) REFERENCES "DimCategory"(categoryid) NOT VALID;
+    END IF;
 
-ALTER TABLE "FactSales"
-    ADD CONSTRAINT fk_fact_country FOREIGN KEY (countryid) REFERENCES "DimCountry"(countryid);
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_fact_country') THEN
+        ALTER TABLE "FactSales"
+            ADD CONSTRAINT fk_fact_country
+            FOREIGN KEY (countryid) REFERENCES "DimCountry"(countryid) NOT VALID;
+    END IF;
 
--- DimItem optional
-ALTER TABLE "FactSales"
-    ADD CONSTRAINT fk_fact_item FOREIGN KEY (itemid) REFERENCES "DimItem"(itemid);
+    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_fact_item') THEN
+        ALTER TABLE "FactSales"
+            ADD CONSTRAINT fk_fact_item
+            FOREIGN KEY (itemid) REFERENCES "DimItem"(itemid) NOT VALID;
+    END IF;
+END $$;
+
 
 
 
