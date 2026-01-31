@@ -107,7 +107,7 @@ Screenshots are available in:
 
 ### ✔ Data Consistency Check
 The source CSV file contains 2605 records, which matches the row count
-validated after import:
+validated after import [`salesrows.png`](screenshots/salesrows.png):
 
 ```sql
 SELECT COUNT(*) FROM sales_data;
