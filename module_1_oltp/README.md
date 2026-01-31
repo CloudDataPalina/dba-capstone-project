@@ -19,19 +19,24 @@ The module establishes the foundation of the data platform by validating data in
 ## 📁 Structure module_1_oltp
 ```
 module_1_oltp/
-├── README.md
-├── schema.sql
-├── verification_queries.sql
-├── indexing.sql
-├── datadump.sh
-└── screenshots/
+├── README.md                     ← Module documentation
+├── schema.sql                    ← OLTP table definition
+├── verification_queries.sql      ← Data validation queries
+├── indexing.sql                  ← Index creation and verification
+├── datadump.sh                   ← Bash script for data export
+└── screenshots/                  ← Execution evidence
+    ├── createtable.png           ← Table creation
+    ├── importdata.png            ← CSV data import
+    ├── listtables.png            ← SHOW TABLES
+    ├── salesrows.png             ← Row count validation
+    ├── listindexes.png           ← Index verification
+    └── exportdata.png            ← mysqldump execution
 ```
 
 ## 🛠 Tools & Technologies
 - MySQL
 - phpMyAdmin
 - Bash
-- Cloud IDE (SN Labs)
 
 ---
 
@@ -41,7 +46,7 @@ module_1_oltp/
 The `sales_data` table stores transactional sales information, including product identifiers, customer identifiers, pricing, quantity, and timestamps.
 
 Database schema is defined in:
-`schema.sql`
+[`schema.sql`](schema.sql)
 
 ---
 
@@ -53,7 +58,7 @@ Data integrity was validated by:
 - Counting total rows after import
 
 Validation queries are stored in:
-`verification_queries.sql`
+[`verification_queries.sql`](verification_queries.sql)
 
 ---
 
@@ -63,7 +68,7 @@ Validation queries are stored in:
 Indexes were created and verified to support efficient query execution on timestamp-based operations and future analytical workloads.
 
 Index-related queries are stored in:
-`indexing.sql`
+[`indexing.sql`](indexing.sql)
 
 ---
 
@@ -71,7 +76,7 @@ Index-related queries are stored in:
 A Bash script was implemented to automate data export from MySQL using `mysqldump`.
 
 Export script:
-`datadump.sh`
+[`datadump.sh`](datadump.sh)
 
 The script exports all records from the `sales_data` table into a SQL dump file.
 
@@ -86,7 +91,7 @@ This module includes screenshots demonstrating:
 - Successful data export
 
 Screenshots are available in:
-`screenshots/`
+[`screenshots/`](screenshots/)
 
 ---
 
