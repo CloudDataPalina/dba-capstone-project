@@ -1,0 +1,192 @@
+# Module 2 – Data Warehouse & Analytics
+
+## 📌 Module Overview
+In this module, a **Data Warehouse** was designed and implemented for the
+e-commerce company **SoftCart.com** using **PostgreSQL**.
+
+The module focuses on dimensional modeling, data loading, and analytical
+queries such as **GROUPING SETS**, **ROLLUP**, **CUBE**, and
+**Materialized Views (MQTs)** to support business reporting and analytics.
+
+---
+
+## 🎯 Learning Objectives
+- Design a Data Warehouse using a star schema
+- Create dimension and fact tables
+- Load data into a Data Warehouse
+- Write advanced aggregation queries
+- Create and query Materialized Views
+
+---
+
+## 📁 Module Structure
+```
+module_2_data_warehouse/
+├── README.md                       ← Module documentation and explanation
+│
+├── ddl/
+│   └── create_schema.sql           ← Creates schema and defines dimension & fact tables
+│
+├── data/
+│   ├── DimDate.csv                 ← Date dimension source data
+│   ├── DimCategory.csv             ← Product category dimension data
+│   ├── DimCountry.csv              ← Country dimension data
+│   └── FactSales.csv               ← Fact table source data (sales transactions)
+│
+├── dml/
+│   └── load_data.sql               ← COPY commands for loading CSV data into PostgreSQL tables
+│
+├── analytics/
+│   ├── grouping_sets.sql           ← Aggregations using GROUPING SETS
+│   ├── rollup.sql                  ← Hierarchical aggregations using ROLLUP
+│   ├── cube.sql                    ← Multidimensional aggregations using CUBE
+│   └── materialized_view.sql       ← Materialized View for total sales per country
+│
+└── screenshots/
+    ├── createschema.png            ← Schema creation confirmation
+    ├── softcartDimDate.png         ← ERD view of DimDate table
+    ├── dimtables.png               ← ERD view of dimension tables
+    ├── softcartFactSales.png       ← ERD view of FactSales table
+    ├── softcartRelationships.png   ← ERD showing star schema relationships
+    ├── DimDate.png                 ← Data validation for DimDate
+    ├── DimCategory.png             ← Data validation for DimCategory
+    ├── DimCountry.png              ← Data validation for DimCountry
+    ├── FactSales.png               ← Data validation for FactSales
+    ├── groupingsets.png            ← GROUPING SETS query results
+    ├── rollup.png                  ← ROLLUP query results
+    ├── cube.png                    ← CUBE query results
+    └── mqt.png                     ← Materialized View query results
+
+```
+
+
+---
+
+## 🛠 Tools & Technologies
+- PostgreSQL
+- pgAdmin (ERD Designer & Query Tool)
+- IBM Skills Network Labs (SN Labs)
+- Docker-based PostgreSQL environment
+
+---
+
+## 🧱 Data Warehouse Design
+
+### Star Schema
+The Data Warehouse follows a **star schema** design consisting of:
+
+#### Dimension Tables
+- **DimDate** – date attributes (year, month, weekday, etc.)
+- **DimCategory** – product categories
+- **DimCountry** – customer countries
+- **DimItem** – items and prices
+
+### 📌 Note on DimItem
+
+The **DimItem** dimension was designed and created as part of the star schema
+using the ERD tool to represent product-level attributes (item name, price).
+
+However, in this module, **no source CSV data was provided for DimItem**,
+and therefore the table was not populated.
+
+The table remains part of the schema to demonstrate a complete dimensional
+model and to reflect a realistic Data Warehouse design, where some dimensions
+may be populated at later stages or sourced from different systems.
+
+
+#### Fact Table
+- **FactSales** – transactional sales measures (amount, quantity)
+
+📸 ERD screenshots:
+- `softcartDimDate.png`
+- `dimtables.png`
+- `softcartFactSales.png`
+- `softcartRelationships.png`
+
+---
+
+## 🗄 Schema Creation
+A dedicated schema named **staging** was created to host the Data Warehouse objects.
+> Note: Although the staging schema was created, tables were created in the
+> default `public` schema as required by the lab environment.
+
+SQL script:
+```sql
+CREATE SCHEMA staging;
+```
+Screenshot:
+[`createschema.png`](`createschema.png`)
+
+## 📥 Data Loading
+Data was loaded into the dimension and fact tables from CSV files using pgAdmin.
+The data loading process uses PostgreSQL COPY commands executed via pgAdmin.
+Data was loaded into the DimDate, DimCategory, DimCountry, and FactSales tables.
+The DimItem table was created but not populated, as no source dataset was
+provided for this dimension in the lab.
+
+ Loaded datasets:
+- DimDate.csv
+- DimCategory.csv
+- DimCountry.csv
+- FactSales.csv
+
+Each table was validated by querying the first 5 rows.
+
+📸 Validation screenshots:
+- DimDate.png
+- DimCategory.png
+- DimCountry.png
+- FactSales.png
+
+## 📊 Analytical Queries
+***GROUPING SETS***
+Aggregated total sales by country and category.
+Query:
+```sql
+SELECT c.country, cat.category, SUM(f.amount) AS totalsales
+FROM public."FactSales" f
+JOIN public."DimCountry" c ON f.countryid = c.countryid
+JOIN public."DimCategory" cat ON f.categoryid = cat.categoryid
+GROUP BY GROUPING SETS
+(
+    (c.country, cat.category),
+    (c.country),
+    (cat.category),
+    ()
+);
+```
+📸 Screenshot:
+[`groupingsets.png`](`groupingsets.png`)
+
+***ROLLUP***
+Aggregated yearly sales by country.
+📸 Screenshot:
+[`rollup.png`](`rollup.png`) 
+
+***CUBE***
+Calculated average sales across all combinations of year and country.
+📸 Screenshot:
+[`cube.png`](`cube.png`) 
+
+***📦 Materialized View (MQT-style optimization)***
+A Materialized View was created to store total sales per country.
+```sql
+CREATE MATERIALIZED VIEW total_sales_per_country AS
+SELECT c.country, SUM(f.amount) AS total_sales
+FROM public."FactSales" f
+JOIN public."DimCountry" c
+    ON f.countryid = c.countryid
+GROUP BY c.country;
+```
+📸 Screenshot:
+[`mqt.png`](`mqt.png`) 
+
+## ✅ Module Outcome
+
+Data Warehouse successfully designed and implemented
+Data loaded into dimension and fact tables
+Advanced analytical queries executed
+Materialized View created for performance optimization
+
+This module demonstrates practical Data Warehousing and Analytics skills using PostgreSQL in a production-like environment.
+
