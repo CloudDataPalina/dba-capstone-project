@@ -24,6 +24,7 @@ module_1_oltp/
 ├── verification_queries.sql      ← Data validation queries
 ├── indexing.sql                  ← Index creation and verification
 ├── datadump.sh                   ← Bash script for data export
+├── oltpdata.csv                  ← Source transactional data for OLTP import
 └── screenshots/                  ← Execution evidence
     ├── createtable.png           ← Table creation
     ├── importdata.png            ← CSV data import
@@ -56,6 +57,9 @@ Transactional data was imported from a CSV file into the `sales_data` table usin
 Data integrity was validated by:
 - Listing tables in the database
 - Counting total rows after import
+
+Source data file:
+[`oltpdata.csv`](oltpdata.csv)
 
 Validation queries are stored in:
 [`verification_queries.sql`](verification_queries.sql)
