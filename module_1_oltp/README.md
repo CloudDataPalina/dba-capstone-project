@@ -52,8 +52,7 @@ Database schema is defined in:
 ---
 
 ## 📥 Data Ingestion
-Transactional data was imported from a CSV file into the `sales_data` table using **phpMyAdmin**.
-
+Transactional data was imported from a CSV file (`oltpdata.csv`) into the `sales_data` table using **phpMyAdmin**, simulating an initial OLTP data load.
 Data integrity was validated by:
 - Listing tables in the database
 - Counting total rows after import
@@ -77,12 +76,14 @@ Index-related queries are stored in:
 ---
 
 ### Data Export Automation
-A Bash script was implemented to automate data export from MySQL using `mysqldump`.
+The Bash script performs a logical backup by exporting the
+`sales_data` table from the `sales` database into a SQL dump file.
 
 Export script:
 [`datadump.sh`](datadump.sh)
 
-The script exports all records from the `sales_data` table into a SQL dump file.
+The script uses `mysqldump` to extract the table structure and all
+records from `sales.sales_data` and saves them into `sales_data.sql`.
 
 ---
 
