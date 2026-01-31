@@ -47,4 +47,21 @@ CREATE TABLE IF NOT EXISTS "FactSales" (
     quantity INTEGER
 );
 
+-- =========================
+-- Constraints (optional)
+-- =========================
+ALTER TABLE "FactSales"
+    ADD CONSTRAINT fk_fact_date FOREIGN KEY (dateid) REFERENCES "DimDate"(dateid);
+
+ALTER TABLE "FactSales"
+    ADD CONSTRAINT fk_fact_category FOREIGN KEY (categoryid) REFERENCES "DimCategory"(categoryid);
+
+ALTER TABLE "FactSales"
+    ADD CONSTRAINT fk_fact_country FOREIGN KEY (countryid) REFERENCES "DimCountry"(countryid);
+
+-- DimItem optional
+ALTER TABLE "FactSales"
+    ADD CONSTRAINT fk_fact_item FOREIGN KEY (itemid) REFERENCES "DimItem"(itemid);
+
+
 
