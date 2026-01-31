@@ -1,79 +1,51 @@
--- Create schema for Data Warehouse (manual / step-by-step)
-CREATE SCHEMA IF NOT EXISTS staging;
-SET search_path TO staging;
+-- Create the table
 
--- =========================
--- Dimension tables
--- =========================
-CREATE TABLE IF NOT EXISTS "DimDate" (
-    dateid INTEGER PRIMARY KEY,
-    fulldate DATE,
-    day INTEGER,
-    month INTEGER,
-    monthname VARCHAR(20),
-    year INTEGER,
-    weekday VARCHAR(20)
+---------------------------------------
+CREATE TABLE public."DimDate"
+(
+    dateid integer NOT NULL,
+    date date,
+    Year integer,
+    Quarter integer,
+    QuarterName character(50),
+    Month integer,
+    Monthname character(50),
+    Day integer,
+    Weekday integer,
+    WeekdayName character(50),
+    CONSTRAINT "DimDate_pkey" PRIMARY KEY (dateid)
 );
 
-CREATE TABLE IF NOT EXISTS "DimCategory" (
-    categoryid INTEGER PRIMARY KEY,
-    categoryname VARCHAR(50)
+-------------------------------------------------------
+
+CREATE TABLE public."DimCategory"
+(
+    categoryid integer NOT NULL,
+    category character(50),
+    CONSTRAINT "DimCategory_pkey" PRIMARY KEY (categoryid)
 );
 
-CREATE TABLE IF NOT EXISTS "DimCountry" (
-    countryid INTEGER PRIMARY KEY,
-    countryname VARCHAR(50)
+-------------------------------------------------------
+
+CREATE TABLE public."DimCountry"
+(
+    countryid integer NOT NULL,
+    country character(50),
+    CONSTRAINT "DimCountry_pkey" PRIMARY KEY (countryid)
 );
 
--- Optional dimension (designed but not populated in this lab)
-CREATE TABLE IF NOT EXISTS "DimItem" (
-    itemid INTEGER PRIMARY KEY,
-    itemname VARCHAR(100),
-    price NUMERIC(10,2)
+-----------------------------------------------------------
+
+CREATE TABLE public."FactSales"
+(
+    orderid integer NOT NULL,
+    dateid integer,
+    countryid integer,
+    categoryid integer,
+    amount integer,
+    CONSTRAINT "FactSales_pkey" PRIMARY KEY (orderid)
 );
 
--- =========================
--- Fact table
--- =========================
-CREATE TABLE IF NOT EXISTS "FactSales" (
-    salesid INTEGER PRIMARY KEY,
-    dateid INTEGER,
-    categoryid INTEGER,
-    countryid INTEGER,
-    itemid INTEGER,
-    price NUMERIC(10,2),
-    quantity INTEGER
-);
-
--- =========================
--- Constraints (optional, safe for re-runs)
--- =========================
-DO $$
-BEGIN
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_fact_date') THEN
-        ALTER TABLE "FactSales"
-            ADD CONSTRAINT fk_fact_date
-            FOREIGN KEY (dateid) REFERENCES "DimDate"(dateid) NOT VALID;
-    END IF;
-
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_fact_category') THEN
-        ALTER TABLE "FactSales"
-            ADD CONSTRAINT fk_fact_category
-            FOREIGN KEY (categoryid) REFERENCES "DimCategory"(categoryid) NOT VALID;
-    END IF;
-
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_fact_country') THEN
-        ALTER TABLE "FactSales"
-            ADD CONSTRAINT fk_fact_country
-            FOREIGN KEY (countryid) REFERENCES "DimCountry"(countryid) NOT VALID;
-    END IF;
-
-    IF NOT EXISTS (SELECT 1 FROM pg_constraint WHERE conname = 'fk_fact_item') THEN
-        ALTER TABLE "FactSales"
-            ADD CONSTRAINT fk_fact_item
-            FOREIGN KEY (itemid) REFERENCES "DimItem"(itemid) NOT VALID;
-    END IF;
-END $$;
 
 
 
