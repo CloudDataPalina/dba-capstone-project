@@ -16,6 +16,16 @@ The module establishes the foundation of the data platform by validating data in
 - Automate data export using a Bash script
 
 ---
+## 📁 Structure module_1_oltp
+```
+module_1_oltp/
+├── README.md
+├── schema.sql
+├── verification_queries.sql
+├── indexing.sql
+├── datadump.sh
+└── screenshots/
+```
 
 ## 🛠 Tools & Technologies
 - MySQL
