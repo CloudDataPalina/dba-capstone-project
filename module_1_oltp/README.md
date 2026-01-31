@@ -106,7 +106,7 @@ Screenshots are available in:
 - Data export automated using Bash
 
 ### ✔ Data Consistency Check
-The source CSV file contains 2605 records, which matches the row count
+The source CSV file contains **2605 records**, which exactly matches the row count
 validated after import [`salesrows.png`](screenshots/salesrows.png):
 
 ```sql
