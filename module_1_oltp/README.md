@@ -105,5 +105,13 @@ Screenshots are available in:
 - Indexes verified
 - Data export automated using Bash
 
+### ✔ Data Consistency Check
+The source CSV file contains 2605 records, which matches the row count
+validated after import:
+
+```sql
+SELECT COUNT(*) FROM sales_data;
+```
+
 This module demonstrates core **Database Administration (DBA)** skills required for managing transactional databases in a production environment.
 
