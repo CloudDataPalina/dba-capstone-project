@@ -2,77 +2,65 @@
 -- Please log an issue at https://github.com/pgadmin-org/pgadmin4/issues/new/choose if you find any bugs, including reproduction steps.
 BEGIN;
 
-CREATE TABLE IF NOT EXISTS public."softcartDimDate"
+
+CREATE TABLE IF NOT EXISTS public."DimDate"
 (
     dateid integer,
-    fulldate date,
-    day integer,
-    month integer,
-    monthname character varying(20),
+    date date,
     year integer,
-    weekday character varying(20),
+    quarter integer,
+    quartername character varying(50),
+    month integer,
+    monthname character varying(50),
+    day integer,
+    weekday integer,
+    weekdayname character varying(50),
     PRIMARY KEY (dateid)
 );
 
-CREATE TABLE IF NOT EXISTS public."softcartDimCategory"
+CREATE TABLE IF NOT EXISTS public."DimCategory"
 (
     categoryid integer,
-    categoryname character varying(50),
+    category character varying(50),
     PRIMARY KEY (categoryid)
 );
 
-CREATE TABLE IF NOT EXISTS public."softcartDimItem"
-(
-    itemid integer,
-    itemname character varying(100),
-    price numeric(10, 2),
-    PRIMARY KEY (itemid)
-);
-
-CREATE TABLE IF NOT EXISTS public."softcartDimCountry"
+CREATE TABLE IF NOT EXISTS public."DimCountry"
 (
     countryid integer,
-    countryname character varying(50),
+    country character varying(50),
     PRIMARY KEY (countryid)
 );
 
-CREATE TABLE IF NOT EXISTS public."softcartFactSales"
+CREATE TABLE IF NOT EXISTS public."FactSales"
 (
-    salesid integer,
+    orderid integer,
     dateid integer,
-    categoryid integer,
-    itemid integer,
     countryid integer,
-    price numeric(10, 2),
-    quantity integer,
-    PRIMARY KEY (salesid)
+    categoryid integer,
+    amount integer,
+    PRIMARY KEY (orderid)
 );
 
-ALTER TABLE IF EXISTS public."softcartFactSales"
+ALTER TABLE IF EXISTS public."FactSales"
     ADD CONSTRAINT fk_fact_date FOREIGN KEY (dateid)
-    REFERENCES public."softcartDimDate" (dateid) MATCH SIMPLE
+    REFERENCES public."DimDate" (dateid) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
 
 
-ALTER TABLE IF EXISTS public."softcartFactSales"
+ALTER TABLE IF EXISTS public."FactSales"
     ADD CONSTRAINT fk_fact_category FOREIGN KEY (categoryid)
-    REFERENCES public."softcartDimCategory" (categoryid) MATCH SIMPLE
+    REFERENCES public."DimCategory" (categoryid) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
 
-ALTER TABLE IF EXISTS public."softcartFactSales"
-    ADD CONSTRAINT fk_fact_item FOREIGN KEY (itemid)
-    REFERENCES public."softcartDimItem" (itemid) MATCH SIMPLE
-    ON UPDATE NO ACTION
-    ON DELETE NO ACTION
-    NOT VALID;
 
-ALTER TABLE IF EXISTS public."softcartFactSales"
+ALTER TABLE IF EXISTS public."FactSales"
     ADD CONSTRAINT fk_fact_country FOREIGN KEY (countryid)
-    REFERENCES public."softcartDimCountry" (countryid) MATCH SIMPLE
+    REFERENCES public."DimCountry" (countryid) MATCH SIMPLE
     ON UPDATE NO ACTION
     ON DELETE NO ACTION
     NOT VALID;
