@@ -44,8 +44,6 @@ module_2_data_warehouse/
 │   └── materialized_view.sql       ← Materialized View for total sales per country
 │
 └── screenshots/
-    ├── createschema.png            ← Schema creation confirmation
-    ├── DimDateERD.png              ← ERD view of DimDate table
     ├── dimtablesERD.png            ← ERD view of dimension tables
     ├── FactSalesERD.png            ← ERD view of FactSales table
     ├── Relationships.png           ← ERD showing star schema relationships
@@ -101,13 +99,6 @@ A dedicated schema named **staging** was created to host the Data Warehouse obje
 DDL scripts:
 - [`create_schema.sql`](ddl/create_schema.sql)
 - [`erd_create_script.sql`](ddl/erd_create_script.sql)
-
-SQL script:
-```sql
-CREATE SCHEMA staging;
-```
-Screenshot:
-[`createschema.png`](`createschema.png`)
 
 ---
 
