@@ -1,6 +1,7 @@
 BEGIN;
 
--- Optional cleanup to allow re-running the script
+-- Optional: clear tables to allow reruns
+-- If you have FKs enabled, truncate FactSales first or use CASCADE.
 TRUNCATE TABLE
     public."FactSales",
     public."DimDate",
@@ -8,9 +9,10 @@ TRUNCATE TABLE
     public."DimCategory"
 RESTART IDENTITY;
 
--- =========================
--- Load dimension tables
--- =========================
+-- =========================================================
+-- Option A (SN Labs / pgAdmin file path)
+-- Works ONLY if the PostgreSQL server can access /var/lib/pgadmin/
+-- =========================================================
 
 COPY public."DimDate" (
     dateid, date, year, quarter, quartername,
@@ -30,15 +32,17 @@ FROM '/var/lib/pgadmin/DimCountry.csv'
 DELIMITER ','
 CSV HEADER;
 
--- =========================
--- Load fact table
--- =========================
-
-COPY public."FactSales" (
-    orderid, dateid, countryid, categoryid, amount
-)
+COPY public."FactSales" (orderid, dateid, countryid, categoryid, amount)
 FROM '/var/lib/pgadmin/FactSales.csv'
 DELIMITER ','
 CSV HEADER;
 
 COMMIT;
+
+-- =========================================================
+-- Option B (Local / psql)
+-- Use this instead of Option A when COPY fails due to file access.
+-- Run in psql (NOT in pgAdmin Query Tool):
+--   \copy public."DimDate" (...) FROM 'data/DimDate.csv' CSV HEADER;
+-- =========================================================
+
