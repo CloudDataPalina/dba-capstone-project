@@ -85,7 +85,6 @@ The Data Warehouse follows a **star schema** design consisting of:
 - **FactSales** – transactional sales measures (amount, quantity)
 
 📸 ERD screenshots:
-- `DimDate.png`
 - `dimtables.png`
 - `FactSales.png`
 - `Relationships.png`
