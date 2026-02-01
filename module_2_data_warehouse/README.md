@@ -25,7 +25,7 @@ module_2_data_warehouse/
 ├── README.md                       ← Module documentation and explanation
 │
 ├── ddl/
-│   ├── create_schema.sql           ← Creates defines dimension & fact tables
+│   ├── create_schema.sql           ← Defines dimension and fact tables
 │   └── erd_create_script.sql       ← auto-generated pgAdmin ERD script
 │
 ├── data/
@@ -73,7 +73,8 @@ module_2_data_warehouse/
 ## 🧱 Data Warehouse Design
 
 ### Star Schema
-The Data Warehouse follows a **star schema** design consisting of:
+The Data Warehouse follows a **star schema** design, optimized for analytical queries
+and aggregations on sales data.
 
 #### Dimension Tables
 - **DimDate** – date attributes (year, month, weekday, etc.)
@@ -82,105 +83,113 @@ The Data Warehouse follows a **star schema** design consisting of:
 
 
 #### Fact Table
-- **FactSales** – transactional sales measures (amount, quantity)
+- **FactSales** – transactional sales facts containing monetary measures (`amount`) and foreign keys to dimensions
 
 📸 ERD screenshots:
-- `dimtables.png`
-- `FactSales.png`
-- `Relationships.png`
+- [`dimtablesERD.png`](screenshots/dimtablesERD.png)
+- [`FactSalesERD.png`](screenshots/FactSalesERD.png)
+- [`Relationships.png`](screenshots/Relationships.png)
 
 ---
 
 ## 🗄 Schema Creation
-A dedicated schema named **staging** was created to host the Data Warehouse objects.
-> Note: Although the staging schema was created, tables were created in the
-> default `public` schema as required by the lab environment.
+The database schema was created using PostgreSQL DDL scripts.
+All tables were designed according to a star schema model, with clearly
+defined primary keys and foreign key relationships between fact and
+dimension tables.
+
 DDL scripts:
-- [`create_schema.sql`](ddl/create_schema.sql)
-- [`erd_create_script.sql`](ddl/erd_create_script.sql)
+- [`create_schema.sql`](ddl/create_schema.sql) – manual DDL script defining
+  dimension and fact tables for step-by-step execution
+- [`erd_create_script.sql`](ddl/erd_create_script.sql) – auto-generated script
+  created using the pgAdmin ERD tool
+
 
 ---
 
 ## 📥 Data Loading
-Data was loaded into the dimension and fact tables from CSV files using pgAdmin.
-The data loading process uses PostgreSQL COPY commands executed via pgAdmin.
-Data was loaded into the DimDate, DimCategory, DimCountry, and FactSales tables.
-CSV files were loaded via pgAdmin using COPY commands
-from the `/var/lib/pgadmin/` directory as required by SN Labs.
+Data was loaded into the Data Warehouse tables from CSV files using
+PostgreSQL `COPY` commands executed via pgAdmin.
+
+All dimension tables (***DimDate***, ***DimCategory***, ***DimCountry***) and
+the fact table (***FactSales***) were populated from their corresponding CSV files.
+In the IBM Skills Network Labs environment, CSV files were accessed from
+the `/var/lib/pgadmin/` directory and loaded using server-side COPY.
 
  Loaded datasets:
-- DimDate.csv
-- DimCategory.csv
-- DimCountry.csv
-- FactSales.csv
+- [`DimDate.csv`](data/DimDate.csv)
+- [`DimCategory.csv`](data/DimCategory.csv)
+- [`DimCountry.csv`](data/DimCountry.csv)
+- [`FactSales.csv`](data/FactSales.csv)
 
-Each table was validated by querying the first 5 rows.
+Each table was validated after loading by querying the first 5 rows to confirm data correctness.
 
 📸 Validation screenshots:
-- DimDate.png
-- DimCategory.png
-- DimCountry.png
-- FactSales.png
+- [`DimDate.png`](screenshots/DimDate.png)
+- [`DimCategory.png`](screenshots/DimCategory.png)
+- [`DimCountry.png`](screenshots/DimCountry.png)
+- [`FactSales.png`](screenshots/FactSales.png)
 
 ---
 
 ## 📊 Analytical Queries
-***GROUPING SETS***
-Aggregated total sales by country and category.
-Query:
-```sql
-SELECT c.country, cat.category, SUM(f.amount) AS totalsales
-FROM public."FactSales" f
-JOIN public."DimCountry" c ON f.countryid = c.countryid
-JOIN public."DimCategory" cat ON f.categoryid = cat.categoryid
-GROUP BY GROUPING SETS
-(
-    (c.country, cat.category),
-    (c.country),
-    (cat.category),
-    ()
-);
-```
-📸 Screenshot:
-[`groupingsets.png`](`groupingsets.png`)
+### GROUPING SETS
+Aggregated total sales by country and category using GROUPING SETS.
 
-***ROLLUP***
-Aggregated yearly sales by country.
-📸 Screenshot:
-[`rollup.png`](`rollup.png`) 
+📄 Query file:
+- [`grouping_sets.sql`](analytics/grouping_sets.sql)
 
-***CUBE***
-Calculated average sales across all combinations of year and country.
-📸 Screenshot:
-[`cube.png`](`cube.png`) 
+📸 Result:
+- [`groupingsets.png`](screenshots/groupingsets.png)
 
-***📦 Materialized View (MQT-style optimization)***
-A Materialized View was created to store total sales per country.
-```sql
-CREATE MATERIALIZED VIEW total_sales_per_country AS
-SELECT c.country, SUM(f.amount) AS total_sales
-FROM public."FactSales" f
-JOIN public."DimCountry" c
-    ON f.countryid = c.countryid
-GROUP BY c.country;
-```
-📸 Screenshot:
-[`mqt.png`](`mqt.png`) 
+---
 
+### ROLLUP
+Calculated yearly sales totals by country using hierarchical aggregation.
+
+📄 Query file:
+- [`rollup.sql`](analytics/rollup.sql)
+
+📸 Result:
+- [`rollup.png`](screenshots/rollup.png)
+
+---
+
+### CUBE
+Computed average sales across all combinations of year and country.
+
+📄 Query file:
+- [`cube.sql`](analytics/cube.sql)
+
+📸 Result:
+- [`cube.png`](screenshots/cube.png)
+
+---
+
+### 📦 Materialized View
+A Materialized View was created to store total sales per country for performance optimization.
+
+📄 Query file:
+- [`materialized_view.sql`](analytics/materialized_view.sql)
+
+📸 Result:
+- [`mqt.png`](screenshots/mqt.png)
+ 
 ---
 
 ## ▶ Execution Order
-1. Run DDL scripts from `ddl/`
-2. Load CSV files using `dml/load_data.sql`
-3. Execute analytical queries from `analytics/`
+1. Create tables using DDL scripts from [`ddl/`](ddl/)
+2. Load CSV files using [`dml/load_data.sql`](dml/load_data.sql)
+3. Execute analytical queries from [`analytics/`](analytics/)
 
 ---
 
-## ✅ Module Outcome
-- Data Warehouse successfully designed and implemented
-- Data loaded into dimension and fact tables
-- Advanced analytical queries executed
-- Materialized View created for performance optimization
+- ## ✅ Module Outcome
+- Star schema designed and validated through analytical queries
+- Data Warehouse implemented using PostgreSQL
+- Dimension and fact tables populated from external CSV sources
+- Advanced aggregation techniques applied (GROUPING SETS, ROLLUP, CUBE)
+- Materialized View created to improve query performance
 
 This module demonstrates practical Data Warehousing and Analytics skills using PostgreSQL in a production-like environment.
 
