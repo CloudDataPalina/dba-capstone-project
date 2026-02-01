@@ -5,14 +5,14 @@ CREATE TABLE public."DimDate"
 (
     dateid integer NOT NULL,
     date date,
-    Year integer,
-    Quarter integer,
-    QuarterName character(50),
-    Month integer,
-    Monthname character(50),
-    Day integer,
-    Weekday integer,
-    WeekdayName character(50),
+    year integer,
+    quarter integer,
+    quartername character(50),
+    month integer,
+    monthname character(50),
+    day integer,
+    weekday integer,
+    weekdayName character(50),
     CONSTRAINT "DimDate_pkey" PRIMARY KEY (dateid)
 );
 
