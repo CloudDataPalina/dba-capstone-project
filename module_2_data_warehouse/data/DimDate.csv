@@ -1,4 +1,4 @@
-dateid,date,Year,Quarter,QuarterName,Month,Monthname,Day,Weekday,WeekdayName
+dateid,date,year,quarter,quartername,month,monthname,day,weekday,weekdayname
 1,2019-01-01,2019,1,Q1,1,January,1,3,Tuesday
 2,2019-01-02,2019,1,Q1,1,January,2,4,Wednesday
 3,2019-01-03,2019,1,Q1,1,January,3,5,Thursday
