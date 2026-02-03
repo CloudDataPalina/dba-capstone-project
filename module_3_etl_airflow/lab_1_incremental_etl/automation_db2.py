@@ -1,41 +1,39 @@
-import os
 import ibm_db
 import mysql.connector
 
+# -----------------------------
+# MySQL (staging database)
+# -----------------------------
+MYSQL_HOST = "YOUR_MYSQL_HOST"
+MYSQL_PORT = 3306
+MYSQL_USER = "YOUR_MYSQL_USER"
+MYSQL_PASSWORD = "YOUR_MYSQL_PASSWORD"
+MYSQL_DATABASE = "sales"
 
-def _env(name: str, default: str | None = None) -> str:
-    """Read environment variable with optional default; raise if missing."""
-    value = os.getenv(name, default)
-    if value is None or value == "":
-        raise RuntimeError(f"Missing required environment variable: {name}")
-    return value
+# -----------------------------
+# IBM DB2 (production data warehouse)
+# -----------------------------
+DB2_DSN = (
+    "DRIVER={IBM DB2 ODBC DRIVER};"
+    "DATABASE=bludb;"
+    "HOSTNAME=YOUR_DB2_HOST;"
+    "PORT=32286;"
+    "PROTOCOL=TCPIP;"
+    "UID=YOUR_DB2_USER;"
+    "PWD=YOUR_DB2_PASSWORD;"
+    "SECURITY=SSL;"
+)
 
-
-# --- MySQL (staging) ---
-MYSQL_HOST = _env("MYSQL_HOST")
-MYSQL_PORT = int(os.getenv("MYSQL_PORT", "3306"))
-MYSQL_USER = _env("MYSQL_USER")
-MYSQL_PASSWORD = _env("MYSQL_PASSWORD")
-MYSQL_DATABASE = os.getenv("MYSQL_DATABASE", "sales")
-
-# --- IBM DB2 (production DWH) ---
-# Option 1: pass full DSN string via env (recommended for this lab)
-DB2_DSN = _env("DB2_DSN")
-
-
-def get_last_rowid() -> int:
+def get_last_rowid():
     conn = ibm_db.connect(DB2_DSN, "", "")
-    try:
-        sql = "SELECT COALESCE(MAX(rowid), 0) AS max_rowid FROM sales_data"
-        stmt = ibm_db.exec_immediate(conn, sql)
-        row = ibm_db.fetch_assoc(stmt)
-        # DB2 returns column names in uppercase by default
-        return int(row["MAX_ROWID"])
-    finally:
-        ibm_db.close(conn)
+    sql = "SELECT COALESCE(MAX(rowid), 0) AS max_rowid FROM sales_data"
+    stmt = ibm_db.exec_immediate(conn, sql)
+    row = ibm_db.fetch_assoc(stmt)
+    ibm_db.close(conn)
+    return int(row["MAX_ROWID"])
 
 
-def get_latest_records(last_rowid: int):
+def get_latest_records(last_rowid):
     conn = mysql.connector.connect(
         host=MYSQL_HOST,
         port=MYSQL_PORT,
@@ -43,52 +41,47 @@ def get_latest_records(last_rowid: int):
         password=MYSQL_PASSWORD,
         database=MYSQL_DATABASE,
     )
-    try:
-        cursor = conn.cursor()
-        sql = """
-            SELECT rowid, product_id, customer_id, quantity
-            FROM sales_data
-            WHERE rowid > %s
-            ORDER BY rowid
-        """
-        cursor.execute(sql, (last_rowid,))
-        return cursor.fetchall()
-    finally:
-        try:
-            cursor.close()
-        except Exception:
-            pass
-        conn.close()
+    cursor = conn.cursor()
+
+    sql = """
+        SELECT rowid, product_id, customer_id, quantity
+        FROM sales_data
+        WHERE rowid > %s
+        ORDER BY rowid
+    """
+    cursor.execute(sql, (last_rowid,))
+    records = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+    return records
 
 
-def insert_records(records) -> int:
-    if not records:
-        return 0
-
+def insert_records(records):
     conn = ibm_db.connect(DB2_DSN, "", "")
-    try:
-        sql = """
-            INSERT INTO sales_data (rowid, product_id, customer_id, quantity)
-            VALUES (?, ?, ?, ?)
-        """
-        stmt = ibm_db.prepare(conn, sql)
 
-        inserted = 0
-        for record in records:
-            ibm_db.execute(stmt, record)
-            inserted += 1
+    sql = """
+        INSERT INTO sales_data (rowid, product_id, customer_id, quantity)
+        VALUES (?, ?, ?, ?)
+    """
 
-        return inserted
-    finally:
-        ibm_db.close(conn)
+    stmt = ibm_db.prepare(conn, sql)
+
+    for record in records:
+        ibm_db.execute(stmt, record)
+
+    ibm_db.close(conn)
 
 
-if __name__ == "__main__":
-    last_row_id = get_last_rowid()
-    print("Last rowid on production datawarehouse =", last_row_id)
+# -----------------------------
+# ETL execution
+# -----------------------------
+last_row_id = get_last_rowid()
+print("Last rowid on production datawarehouse =", last_row_id)
 
-    records = get_latest_records(last_row_id)
-    print("New rows on staging datawarehouse =", len(records))
+records = get_latest_records(last_row_id)
+print("New rows on staging datawarehouse =", len(records))
 
-    inserted = insert_records(records)
-    print("New rows inserted into production datawarehouse =", inserted)
+insert_records(records)
+print("New rows inserted into production datawarehouse =", len(records))
+
