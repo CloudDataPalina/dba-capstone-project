@@ -115,7 +115,7 @@ Execution output confirms successful synchronization:
 - Last row ID detected in production
 - Number of new records extracted from staging
 - Number of records successfully inserted into production
-Screenshots in the `screenshots/` folder provide execution proof for:
+Screenshots in the [`screenshots/`](lab_1_incremental_etl/screenshots/) folder provide execution proof for:
 - DB2-based ETL run
 - PostgreSQL-based ETL run
 
@@ -145,15 +145,14 @@ Archives the transformed data into a tar file.
 extract_data → transform_data → load_data
 ```
 ### 📦 Pipeline Artifacts
-- `extracted_data.txt`
-- `transformed_data.txt`
-- `weblog.tar`
+- [`extracted_data.txt`](lab_2_airflow_dag/outputs/extracted_data.txt) — result of extract_data task
+- [`transformed_data.txt`](lab_2_airflow_dag/outputs/transformed_data.txt) — result of transform_data task
 
 ## 📊 Monitoring & Execution
 - DAG submitted and triggered via Airflow CLI
 - DAG unpaused and executed successfully
 - Pipeline runs monitored using the Airflow Web UI
-Execution screenshots are provided in the `screenshots/` directory.
+Execution screenshots are provided in the [`screenshots/`](lab_2_airflow_dag/screenshots/) directory.
 
 ---
 
