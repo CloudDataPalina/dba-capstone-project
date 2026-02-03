@@ -52,6 +52,10 @@ module_3_etl_airflow/
     ├── data/                          ← Input data for DAG execution
     │   └── accesslog.txt              ← Web server log file (ETL input)
     │
+    ├── outputs/                       ← ETL results (sample)
+    │   ├── extracted_data.txt         ← Output of extract_data task
+    │   └── transformed_data.txt       ← Output of transform_data task
+    │
     └── screenshots/                   ← Airflow execution and monitoring evidence
         ├── dag_args.png               ← DAG default arguments definition
         ├── dag_definition.png         ← DAG configuration and schedule
