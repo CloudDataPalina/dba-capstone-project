@@ -1,10 +1,10 @@
 # Module 3 – ETL Pipelines & Workflow Orchestration
 
 ## 📌 Module Overview
-This module focuses on ***ETL processes and data pipeline orchestration***.
-It demonstrates how transactional data is incrementally synchronized between databases and how automated workflows are scheduled and monitored using ***Apache Airflow***.
+This module focuses on **ETL processes and data pipeline orchestration**.
+It demonstrates how transactional data is incrementally synchronized between databases and how automated workflows are scheduled and monitored using **Apache Airflow**.
 
-The module consists of ***two practical labs***:
+The module consists of **two practical labs**:
 1. Incremental ETL pipeline between databases
 2. Workflow orchestration with Apache Airflow DAGs
 
@@ -80,15 +80,15 @@ module_3_etl_airflow/
 ## Lab 1 – Incremental ETL Pipeline (MySQL → Production DWH)
 ### Description
 This lab **implements an incremental ETL pipeline** that synchronizes data from a **staging database (MySQL)** into a production data warehouse.
-The same ETL pattern is implemented and validated against ***two different production targets***:
+The same ETL pattern is implemented and validated against **two different production targets**:
 ***Option A***: IBM DB2
 ***Option B***: PostgreSQL
 This demonstrates portability of ETL logic across different database technologies.
 
 ### 🏗 Architecture
-- ***Staging Database***: MySQL (`sales.sales_data`)
-- ***Production Data Warehouse***: IBM DB2 or PostgreSQL
-- ***Incremental Key***: `rowid`
+- **Staging Database**: MySQL (`sales.sales_data`)
+- **Production Data Warehouse**: IBM DB2 or PostgreSQL
+- **Incremental Key**: `rowid`
 
 ### ⚙️ ETL Logic
 1. Identify the last loaded record in the production data warehouse
@@ -98,13 +98,13 @@ This demonstrates portability of ETL logic across different database technologie
 3. Insert incremental records into the production data warehouse
 
 ### 🧩 Implemented Functions
+- `get_last_rowid()`  
+  Retrieves the maximum rowid from the production data warehouse.
+- `get_latest_records(last_rowid)`  
+  Extracts new records from the MySQL staging database.
+- `insert_records(records)`  
+  Loads the incremental records into the production data warehouse.
 
--`get_last_rowid()`
-Retrieves the maximum rowid from the production data warehouse.
-- `get_latest_records(last_rowid)`
-Extracts new records from the MySQL staging database.
-- `insert_records(records)`
-Loads the incremental records into the production data warehouse.
 
 ### 🧪 Validation & Evidence
 Execution output confirms successful synchronization:
