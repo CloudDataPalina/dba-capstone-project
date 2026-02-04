@@ -1,0 +1,8 @@
+# Backup FactSales table using mysqldump
+# Port: 3306
+# Password requested interactively
+
+mysqldump -u root -p -P 3306 sales FactSales > sales_backup.sql
+
+# Verify backup file
+ls -lh sales_backup.sql
