@@ -56,7 +56,7 @@ dba-capstone-project/
 ├── module_5_security_optimization/      → Query optimization, access control, encryption, and performance tuning
 │
 └── docs/
-    └── architecture.md            → High-level system and data architecture documentation
+    └── architecture.md                  → High-level system and data architecture documentation
 
 ```
 ---
