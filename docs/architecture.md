@@ -3,6 +3,14 @@
 This document describes the overall architecture of the **DBA Capstone Project**,
 including database layers, data flow, security controls, and maintenance processes.
 
+## High-Level Data Architecture
+```
+OLTP (MySQL)
+   |
+   |  ETL (Airflow DAGs)
+   v
+Data Warehouse (MySQL/PostgreSQL)
+```
 ---
 
 ## 1. System Overview
@@ -61,6 +69,8 @@ All components are implemented using **MySQL** and supporting tools.
 - Scheduling:
   - DAG-based orchestration
   - Automated execution
+
+This approach ensures repeatable, reliable, and automated data movement between systems.
 
 ---
 
