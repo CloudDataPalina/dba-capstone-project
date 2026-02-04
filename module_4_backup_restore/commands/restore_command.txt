@@ -1,0 +1,11 @@
+# Restore FactSales table from backup using MySQL CLI
+# Port: 3306
+# Password requested interactively
+
+mysql -u root -p -P 3306 sales < sales_backup.sql
+
+# Verify restored table
+mysql -u root -p -P 3306 -e "USE sales; SHOW TABLES;"
+
+# Validate restored data
+mysql -u root -p -P 3306 -e "USE sales; SELECT * FROM FactSales LIMIT 5;"
