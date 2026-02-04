@@ -34,7 +34,7 @@ Your responsibilities include:
 ---
 
 ## 🧠 Project Architecture
-The platform follows a **hybrid data architecture**:
+The platform follows a **hybrid OLTP + Data Warehouse architecture**
 
 - **OLTP Database:** MySQL  
 - **Staging & Data Warehouse:** PostgreSQL  
@@ -49,14 +49,15 @@ Transactional data is stored in MySQL and periodically extracted, transformed, a
 ```
 dba-capstone-project/
 │
-├── [module_1_oltp](module_1_oltp/)
-├── [module_2_data_warehouse](module_2_data_warehouse/)
-├── [module_3_etl_airflow](module_3_etl_airflow/)
-├── [module_4_backup_restore](module_4_backup_restore/)
-├── [module_5_security_optimization](module_5_security_optimization/)
+├── module_1_oltp/                       → OLTP database design, transactional schema, indexing, data export
+├── module_2_data_warehouse/             → Data warehouse design, fact & dimension tables, analytical queries
+├── module_3_etl_airflow/                → ETL pipelines and workflow orchestration using Apache Airflow
+├── module_4_backup_restore/             → Database backup, restore, automation, and disaster recovery
+├── module_5_security_optimization/      → Query optimization, access control, encryption, and performance tuning
 │
-└── [docs](docs/)
-    └── architecture.md
+└── docs/
+    └── architecture.md            → High-level system and data architecture documentation
+
 ```
 ---
 
