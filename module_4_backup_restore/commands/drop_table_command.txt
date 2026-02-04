@@ -1,0 +1,8 @@
+# Drop FactSales table to simulate data loss
+# Port: 3306
+# Password requested interactively
+
+mysql -u root -p -P 3306 -e "USE sales; DROP TABLE FactSales;"
+
+# Verify table removal
+mysql -u root -p -P 3306 -e "USE sales; SHOW TABLES;"
