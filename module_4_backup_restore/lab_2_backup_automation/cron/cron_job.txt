@@ -1,0 +1,1 @@
+*/3 * * * * /home/theia/backup_automation.sh
