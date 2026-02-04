@@ -46,19 +46,17 @@ Transactional data is stored in MySQL and periodically extracted, transformed, a
 ---
 
 ## 📁 Repository Structure
-```text
+```
 dba-capstone-project/
 │
-├── README.md
-├── module_1_oltp/
-├── module_2_data_warehouse/
-├── module_3_etl_airflow/
-├── module_4_backup_restore/
-├── module_5_security_optimization/
+├── [module_1_oltp](module_1_oltp/)
+├── [module_2_data_warehouse](module_2_data_warehouse/)
+├── [module_3_etl_airflow](module_3_etl_airflow/)
+├── [module_4_backup_restore](module_4_backup_restore/)
+├── [module_5_security_optimization](module_5_security_optimization/)
 │
-└── docs/
+└── [docs](docs/)
     └── architecture.md
-
 ```
 ---
 
@@ -75,51 +73,41 @@ dba-capstone-project/
 
 ## 📦 Project Modules
 
-### Module 1 – OLTP Database & Platform Architecture
+### [Module 1 – OLTP Database & Platform Architecture](module_1_oltp/)
 - Designed and implemented an OLTP database using MySQL
 - Created and populated transactional tables
 - Verified data integrity using SQL queries
 - Created indexes for performance optimization
 - Automated data export using Bash scripts
 
-📁 `module_1_oltp/`
-
 ---
 
-### Module 2 – Data Warehouse Design
+### [Module 2 – Data Warehouse Design](module_2_data_warehouse/)
 - Designed and implemented a relational data warehouse
-- Created multiple tables and defined schema relationships
-- Executed analytical queries across individual and joined tables
-
-📁 `module_2_data_warehouse/`
+- Created fact and dimension tables
+- Executed analytical queries for reporting and analysis
 
 ---
 
-### Module 3 – ETL Pipelines with Apache Airflow
+### [Module 3 – ETL Pipelines with Apache Airflow](module_3_etl_airflow/)
 - Built ETL pipelines for data extraction, transformation, and loading
 - Automated workflows using Apache Airflow DAGs
 - Ensured reliable and repeatable data integration processes
 
-📁 `module_3_etl_airflow/`
-
 ---
 
-### Module 4 – Backup, Restore & Automation
+### [Module 4 – Backup, Restore & Automation](module_4_backup_restore/)
 - Implemented database backup and restore strategies
 - Simulated data loss scenarios
-- Automated backup and recovery operations using scripts
-
-📁 `module_4_backup_restore/`
+- Automated backup and recovery operations using Bash and CRON
 
 ---
 
-### Module 5 – Database Optimization & Security
-- Optimized SQL queries for performance
+### [Module 5 – Database Optimization & Security](module_5_security_optimization/)
+- Optimized SQL queries using indexes and execution plans
 - Managed user roles and access permissions
-- Implemented data security and encryption techniques
-- Improved memory usage and execution efficiency
-
-📁 `module_5_security_optimization/`
+- Implemented data encryption and column-level security
+- Improved memory usage and query execution efficiency
 
 ---
 
