@@ -2,7 +2,7 @@
 
 ## 📌 Module Overview
 In this module, a **Data Warehouse** was designed and implemented for the
-e-commerce company **SoftCart.com** using **PostgreSQL**.
+e-commerce company using **PostgreSQL**.
 
 The module focuses on dimensional modeling, data loading, and analytical
 queries such as **GROUPING SETS**, **ROLLUP**, **CUBE**, and
